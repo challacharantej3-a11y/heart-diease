@@ -1,0 +1,142 @@
+// ---------------------------------------------------------------
+// Heart Health Guide - shared site script
+// Runs on every page. Two independent, self-guarded parts:
+//   1) Site chrome: mobile nav toggle + "current page" nav highlight
+//   2) Risk Check tool logic: only wires up if a #risk-form exists
+//      on the current page (i.e. only on risk-check.html)
+// ---------------------------------------------------------------
+
+// ---------- 1) Site chrome (every page) ----------
+(function siteChrome() {
+  const toggle = document.getElementById("nav-toggle");
+  const links = document.getElementById("nav-links");
+
+  if (toggle && links) {
+    toggle.addEventListener("click", () => {
+      const isOpen = links.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", String(isOpen));
+    });
+  }
+
+  // Highlight the nav link matching the current page
+  const currentFile = window.location.pathname.split("/").pop() || "index.html";
+  document.querySelectorAll(".nav-links a").forEach((link) => {
+    const linkFile = link.getAttribute("href").split("#")[0];
+    if (linkFile === currentFile) {
+      link.setAttribute("aria-current", "page");
+    }
+  });
+})();
+
+// ---------- 2) Risk Check tool (risk-check.html only) ----------
+(function riskCheckTool() {
+  const form = document.getElementById("risk-form");
+  if (!form) return; // not on the risk-check page, nothing to wire up
+
+  // API_BASE is empty because the Flask app serves this frontend itself
+  // (same origin -> relative "/api/..." calls work). If you ever deploy
+  // the frontend separately from the backend, set this to the full
+  // backend URL, e.g. "https://your-backend.example.com".
+  const API_BASE = "";
+
+  const submitBtn = document.getElementById("submit-btn");
+  const errorMsg = document.getElementById("error-msg");
+  const resultSection = document.getElementById("result");
+  const resultBadge = document.getElementById("result-badge");
+  const resultTitle = document.getElementById("result-title");
+  const resultDetail = document.getElementById("result-detail");
+
+  function wireSliderOutput(inputId, outputId, decimals = 0) {
+    const input = document.getElementById(inputId);
+    const output = document.getElementById(outputId);
+    input.addEventListener("input", () => {
+      output.textContent = decimals > 0
+        ? Number(input.value).toFixed(decimals)
+        : input.value;
+    });
+  }
+  wireSliderOutput("age", "age-out");
+  wireSliderOutput("max_hr", "max_hr-out");
+  wireSliderOutput("oldpeak", "oldpeak-out", 1);
+
+  function hideError() {
+    errorMsg.hidden = true;
+    errorMsg.textContent = "";
+  }
+
+  function showError(message) {
+    errorMsg.textContent = message;
+    errorMsg.hidden = false;
+  }
+
+  function showResult(prediction, risk) {
+    resultSection.hidden = false;
+    resultSection.className = risk === "High" ? "result high" : "result low";
+
+    if (risk === "High") {
+      resultBadge.textContent = "Elevated pattern";
+      resultTitle.textContent = "These values show a pattern linked to higher risk";
+      resultDetail.textContent =
+        "This screening tool found a pattern in these numbers that is statistically " +
+        "associated with heart disease in the training data. It is not a diagnosis. " +
+        "Please share these results with a doctor or nurse practitioner.";
+    } else {
+      resultBadge.textContent = "Lower pattern";
+      resultTitle.textContent = "These values show a pattern linked to lower risk";
+      resultDetail.textContent =
+        "This screening tool did not find the pattern it associates with elevated " +
+        "risk. That's reassuring, but it does not rule anything out. Routine " +
+        "checkups are still the best way to track heart health over time.";
+    }
+
+    resultSection.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    hideError();
+    resultSection.hidden = true;
+
+    const payload = {
+      age: document.getElementById("age").value,
+      sex: document.getElementById("sex").value,
+      chest_pain: document.getElementById("chest_pain").value,
+      resting_bp: document.getElementById("resting_bp").value,
+      cholesterol: document.getElementById("cholesterol").value,
+      fasting_bs: document.getElementById("fasting_bs").value,
+      resting_ecg: document.getElementById("resting_ecg").value,
+      max_hr: document.getElementById("max_hr").value,
+      exercise_angina: document.getElementById("exercise_angina").value,
+      oldpeak: document.getElementById("oldpeak").value,
+      st_slope: document.getElementById("st_slope").value,
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Checking...";
+
+    try {
+      const response = await fetch(`${API_BASE}/api/predict`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        showError(data.error || "Something went wrong. Please try again.");
+        return;
+      }
+
+      showResult(data.prediction, data.risk);
+    } catch (err) {
+      showError(
+        "Could not reach the prediction service. Confirm the backend is " +
+        "running and reachable at " + (API_BASE || window.location.origin) + "."
+      );
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Check my risk";
+    }
+  });
+})();

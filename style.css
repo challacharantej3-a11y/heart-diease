@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prevention | Heart Health Guide</title>
+<meta name="description" content="Everyday habits linked to lower heart disease risk, based on American Heart Association and CDC guidance.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div class="disclaimer-bar">
+  <strong>Heart Health Guide</strong> provides general health education only. It does not diagnose conditions and is not a substitute for professional medical advice. <a href="resources.html#emergency">Having symptoms now?</a>
+</div>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8.5c0-2.5-2-4.5-4.5-4.5-1.6 0-3 .8-3.5 2-0.5-1.2-1.9-2-3.5-2C6 4 4 6 4 8.5 4 13 12 19 12 19s8-6 8-10.5Z"/></svg>
+      Heart Health Guide
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">&#9776;</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="understanding-heart-disease.html">Understanding</a></li>
+      <li><a href="risk-factors.html">Risk Factors</a></li>
+      <li><a href="warning-signs.html">Warning Signs</a></li>
+      <li><a href="prevention.html">Prevention</a></li>
+      <li><a href="resources.html">Get Help</a></li>
+      <li><a href="risk-check.html" class="nav-cta">Risk Check Tool</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+
+  <section class="page hero" style="padding-bottom: 20px;">
+    <span class="eyebrow">Prevention</span>
+    <h1>Small, steady habits do most of the work</h1>
+    <p class="lede">Prevention isn't one big change &mdash; it's several ordinary habits, practiced consistently. Here's what national heart health guidance points to.</p>
+  </section>
+
+  <section class="page-narrow section" style="padding-top: 0;">
+
+    <div class="alert-box neutral">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16" r="0.5" fill="currentColor"/></svg>
+      <div>
+        <h3>Before making changes</h3>
+        <p>These are general wellness habits, not a personal treatment plan. If you have an existing heart condition, are pregnant, or are new to exercise, check with your doctor before starting something new &mdash; especially anything vigorous.</p>
+      </div>
+    </div>
+
+    <div class="content-block" style="margin-top: 26px;">
+      <h2>Move regularly</h2>
+      <p>
+        The American Heart Association's general guideline is about <strong>150 minutes
+        a week of moderate-intensity aerobic activity</strong> (like brisk walking), or
+        <strong>75 minutes a week of vigorous activity</strong> (like jogging), or a mix
+        of both. Spread across most days, that's roughly 20&ndash;30 minutes a day &mdash;
+        and it doesn't need to happen all at once.
+      </p>
+      <p class="source-note">Source: American Heart Association</p>
+    </div>
+
+    <div class="content-block">
+      <h2>Don't smoke &mdash; and if you do, quitting helps fast</h2>
+      <p>
+        Smoking is one of the most significant, modifiable risk factors for heart
+        disease. The encouraging part: the benefit of quitting starts quickly. Just one
+        year after quitting, a former smoker's risk of coronary heart disease drops by
+        roughly half compared to someone who continues smoking.
+      </p>
+      <p class="source-note">Source: American Heart Association</p>
+    </div>
+
+    <div class="content-block">
+      <h2>Know your numbers</h2>
+      <p>
+        Blood pressure, cholesterol, and blood sugar rarely cause symptoms on their own
+        in the early stages &mdash; the only way to know where you stand is to get them
+        checked. Ask your doctor how often makes sense for you, since it depends on your
+        age, history, and current numbers.
+      </p>
+    </div>
+
+    <div class="content-block">
+      <h2>Build a heart-healthier plate</h2>
+      <p>
+        General guidance favors eating patterns built around vegetables, fruits, whole
+        grains, lean proteins, and healthy fats, while limiting excess sodium, added
+        sugar, and saturated fat. There's no single "perfect" diet &mdash; consistency
+        over time matters more than any one meal.
+      </p>
+    </div>
+
+    <div class="content-block">
+      <h2>Mind alcohol, sleep, and stress</h2>
+      <p>
+        Heavy alcohol use can raise blood pressure and contribute to other risk factors,
+        so moderation matters. Poor sleep and chronic stress are also linked to
+        cardiovascular strain over time &mdash; they're easy to deprioritize, but they're
+        part of the same picture as diet and exercise.
+      </p>
+    </div>
+
+    <div class="content-block">
+      <h2>Keep up with checkups</h2>
+      <p>
+        Routine visits are how blood pressure, cholesterol, and blood sugar actually get
+        caught early &mdash; often before any symptoms appear. If it's been a while since
+        your last one, that's a reasonable place to start.
+      </p>
+    </div>
+
+  </section>
+
+  <section class="page section">
+    <div class="cta-banner">
+      <div>
+        <h2>Ready to see where you stand today?</h2>
+        <p>The risk check tool can show which pattern your current numbers resemble &mdash; a useful thing to bring to your next appointment.</p>
+      </div>
+      <a href="risk-check.html" class="btn btn-primary">Open the risk check tool</a>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <h4>Heart Health Guide</h4>
+        <p>Plain-language heart health education to help you understand your risk and know when to see a professional. This site does not diagnose or treat any condition.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="understanding-heart-disease.html">Understanding Heart Disease</a></li>
+          <li><a href="risk-factors.html">Risk Factors</a></li>
+          <li><a href="warning-signs.html">Warning Signs</a></li>
+          <li><a href="prevention.html">Prevention</a></li>
+          <li><a href="risk-check.html">Risk Check Tool</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get Help</h4>
+        <ul>
+          <li><a href="resources.html">Find Care &amp; Resources</a></li>
+          <li><a href="resources.html#sources">Our Sources</a></li>
+          <li><a href="resources.html#emergency">Emergency Guidance</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p><strong>Medical disclaimer:</strong> Heart Health Guide is an educational resource. It is not a medical device, does not provide diagnoses, and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of a physician or other qualified health provider with any questions about a medical condition. If you think you may have a medical emergency, call your local emergency number immediately.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

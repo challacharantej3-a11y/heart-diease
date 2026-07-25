@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk Check Tool | Heart Health Guide</title>
+<meta name="description" content="A free screening tool that estimates whether your numbers show a pattern linked to heart disease risk. Not a diagnosis.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<div class="disclaimer-bar">
+  <strong>Heart Health Guide</strong> provides general health education only. It does not diagnose conditions and is not a substitute for professional medical advice. <a href="resources.html#emergency">Having symptoms now?</a>
+</div>
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a class="brand" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 8.5c0-2.5-2-4.5-4.5-4.5-1.6 0-3 .8-3.5 2-0.5-1.2-1.9-2-3.5-2C6 4 4 6 4 8.5 4 13 12 19 12 19s8-6 8-10.5Z"/></svg>
+      Heart Health Guide
+    </a>
+    <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">&#9776;</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="understanding-heart-disease.html">Understanding</a></li>
+      <li><a href="risk-factors.html">Risk Factors</a></li>
+      <li><a href="warning-signs.html">Warning Signs</a></li>
+      <li><a href="prevention.html">Prevention</a></li>
+      <li><a href="resources.html">Get Help</a></li>
+      <li><a href="risk-check.html" class="nav-cta">Risk Check Tool</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="pulse-strip" aria-hidden="true">
+  <svg viewBox="0 0 600 60" preserveAspectRatio="none">
+    <polyline class="pulse-line" points="0,30 90,30 105,10 120,50 135,5 150,30 240,30 255,20 270,30 600,30" />
+  </svg>
+</div>
+
+<main id="main" class="wrap">
+
+  <div class="alert-box info" style="margin-bottom: 28px;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><circle cx="12" cy="16" r="0.5" fill="currentColor"/></svg>
+    <div>
+      <h3>What this tool actually does</h3>
+      <p>This is a statistical screening aid, not a diagnostic device. It compares the numbers you enter to patterns found in a research dataset and shows which pattern they resemble more closely. It cannot see your full medical history, run any tests, or examine you &mdash; only a qualified clinician can do that. Use the result as a conversation starter with your doctor, never as an answer on its own.</p>
+    </div>
+  </div>
+
+  <header class="header">
+    <span class="eyebrow">Cardiac Risk Screening</span>
+    <h1>Heart Risk Check</h1>
+    <p class="sub">Enter the clinical values below for an instant, model-based estimate of which risk pattern they resemble. If you don't know a value offhand (like cholesterol), a recent lab report or your doctor's office can help.</p>
+  </header>
+
+  <form id="risk-form" class="card" novalidate>
+
+    <div class="field-grid">
+
+      <div class="field">
+        <label for="age">Age <span class="unit">years</span></label>
+        <input type="range" id="age" min="18" max="100" value="40">
+        <output for="age" id="age-out">40</output>
+      </div>
+
+      <div class="field">
+        <label for="sex">Sex</label>
+        <select id="sex">
+          <option value="M">Male</option>
+          <option value="F">Female</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="chest_pain">Chest pain type</label>
+        <select id="chest_pain">
+          <option value="ATA">Atypical angina</option>
+          <option value="NAP">Non-anginal pain</option>
+          <option value="TA">Typical angina</option>
+          <option value="ASY">Asymptomatic</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="resting_bp">Resting blood pressure <span class="unit">mm Hg</span></label>
+        <input type="number" id="resting_bp" min="80" max="200" value="120">
+      </div>
+
+      <div class="field">
+        <label for="cholesterol">Cholesterol <span class="unit">mg/dL</span></label>
+        <input type="number" id="cholesterol" min="100" max="600" value="200">
+      </div>
+
+      <div class="field">
+        <label for="fasting_bs">Fasting blood sugar &gt; 120 mg/dL</label>
+        <select id="fasting_bs">
+          <option value="0">No</option>
+          <option value="1">Yes</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="resting_ecg">Resting ECG</label>
+        <select id="resting_ecg">
+          <option value="Normal">Normal</option>
+          <option value="ST">ST-T abnormality</option>
+          <option value="LVH">Left ventricular hypertrophy</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="max_hr">Max heart rate <span class="unit">bpm</span></label>
+        <input type="range" id="max_hr" min="60" max="220" value="150">
+        <output for="max_hr" id="max_hr-out">150</output>
+      </div>
+
+      <div class="field">
+        <label for="exercise_angina">Exercise-induced angina</label>
+        <select id="exercise_angina">
+          <option value="N">No</option>
+          <option value="Y">Yes</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="oldpeak">Oldpeak <span class="unit">ST depression</span></label>
+        <input type="range" id="oldpeak" min="0" max="6" step="0.1" value="1.0">
+        <output for="oldpeak" id="oldpeak-out">1.0</output>
+      </div>
+
+      <div class="field">
+        <label for="st_slope">ST slope</label>
+        <select id="st_slope">
+          <option value="Up">Upsloping</option>
+          <option value="Flat">Flat</option>
+          <option value="Down">Downsloping</option>
+        </select>
+      </div>
+
+    </div>
+
+    <button type="submit" id="submit-btn">Check my risk</button>
+
+    <p id="error-msg" class="error-msg" role="alert" hidden></p>
+  </form>
+
+  <section id="result" class="result" hidden aria-live="polite">
+    <div class="result-inner">
+      <span id="result-badge" class="badge"></span>
+      <h2 id="result-title"></h2>
+      <p id="result-detail"></p>
+    </div>
+  </section>
+
+  <div class="alert-box emergency" style="margin-top: 24px;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><circle cx="12" cy="16.5" r="0.5" fill="currentColor"/><path d="M10.3 3.9 2.5 18a2 2 0 0 0 1.7 3h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
+    <div>
+      <h3>If you're having symptoms right now, don't wait for a tool</h3>
+      <p>Chest pain or pressure, shortness of breath, or sudden pain spreading to your arm, jaw, or back can be a medical emergency. Call your local emergency number immediately. See the <a href="warning-signs.html">warning signs page</a> for the full list.</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>Powered by a K-Nearest-Neighbors model trained on the public UCI Heart Failure clinical dataset. Model outputs reflect statistical association only and are not clinically validated for individual diagnosis. For informational use only &mdash; always consult a clinician.</p>
+  </footer>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div>
+        <h4>Heart Health Guide</h4>
+        <p>Plain-language heart health education to help you understand your risk and know when to see a professional. This site does not diagnose or treat any condition.</p>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="understanding-heart-disease.html">Understanding Heart Disease</a></li>
+          <li><a href="risk-factors.html">Risk Factors</a></li>
+          <li><a href="warning-signs.html">Warning Signs</a></li>
+          <li><a href="prevention.html">Prevention</a></li>
+          <li><a href="risk-check.html">Risk Check Tool</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get Help</h4>
+        <ul>
+          <li><a href="resources.html">Find Care &amp; Resources</a></li>
+          <li><a href="resources.html#sources">Our Sources</a></li>
+          <li><a href="resources.html#emergency">Emergency Guidance</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p><strong>Medical disclaimer:</strong> Heart Health Guide is an educational resource. It is not a medical device, does not provide diagnoses, and is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of a physician or other qualified health provider with any questions about a medical condition. If you think you may have a medical emergency, call your local emergency number immediately.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
