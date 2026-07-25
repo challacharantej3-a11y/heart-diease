@@ -1,0 +1,151 @@
+"""
+Heart Disease Prediction API
+-----------------------------
+Flask backend that wraps the trained KNN model (knn_heart_model.pkl),
+StandardScaler (heart_scaler.pkl) and expected feature column order
+(heart_columns.pkl) behind a small REST API.
+
+The logic mirrors the original Streamlit script (app1.py) exactly:
+raw form fields -> one-hot dict -> fill missing expected columns with 0
+-> reorder columns -> scale -> predict.
+
+Endpoints:
+    GET  /api/health   -> simple liveness check
+    POST /api/predict   -> body: JSON with the 11 raw form fields, returns
+                           {"prediction": 0|1, "risk": "Low"|"High"}
+    GET  /              -> serves the frontend (index.html) so the whole
+                           app can be run from a single process/port
+"""
+
+import os
+import joblib
+import pandas as pd
+from flask import Flask, request, jsonify, send_from_directory
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+FRONTEND_DIR = os.path.join(os.path.dirname(BASE_DIR), "frontend")
+
+app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path="")
+
+
+@app.after_request
+def add_cors_headers(response):
+    # Allows the frontend to call this API even if it's ever hosted on a
+    # different origin from the backend (e.g. static host + separate API
+    # server). No extra dependency (flask-cors) required.
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+    return response
+
+# ---------------------------------------------------------------------------
+# Load model artifacts once at startup
+# ---------------------------------------------------------------------------
+model = joblib.load(os.path.join(BASE_DIR, "knn_heart_model.pkl"))
+scaler = joblib.load(os.path.join(BASE_DIR, "heart_scaler.pkl"))
+expected_columns = joblib.load(os.path.join(BASE_DIR, "heart_columns.pkl"))
+
+# Fields required in every prediction request, with basic validation ranges
+REQUIRED_FIELDS = {
+    "age": (18, 100),
+    "sex": ("M", "F"),
+    "chest_pain": ("ATA", "NAP", "TA", "ASY"),
+    "resting_bp": (80, 200),
+    "cholesterol": (100, 600),
+    "fasting_bs": (0, 1),
+    "resting_ecg": ("Normal", "ST", "LVH"),
+    "max_hr": (60, 220),
+    "exercise_angina": ("Y", "N"),
+    "oldpeak": (0.0, 6.0),
+    "st_slope": ("Up", "Flat", "Down"),
+}
+
+
+def validate_payload(data):
+    """Return an error message string if invalid, otherwise None."""
+    missing = [f for f in REQUIRED_FIELDS if f not in data]
+    if missing:
+        return f"Missing field(s): {', '.join(missing)}"
+
+    numeric_fields = {"age", "resting_bp", "cholesterol", "fasting_bs", "max_hr", "oldpeak"}
+    for field in numeric_fields:
+        try:
+            float(data[field])
+        except (TypeError, ValueError):
+            return f"Field '{field}' must be numeric"
+
+    categorical_fields = {
+        "sex": ("M", "F"),
+        "chest_pain": ("ATA", "NAP", "TA", "ASY"),
+        "resting_ecg": ("Normal", "ST", "LVH"),
+        "exercise_angina": ("Y", "N"),
+        "st_slope": ("Up", "Flat", "Down"),
+    }
+    for field, allowed in categorical_fields.items():
+        if data[field] not in allowed:
+            return f"Field '{field}' must be one of {allowed}"
+
+    return None
+
+
+@app.route("/api/health", methods=["GET"])
+def health():
+    return jsonify({"status": "ok"})
+
+
+@app.route("/api/predict", methods=["POST"])
+def predict():
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Request body must be JSON"}), 400
+
+    error = validate_payload(data)
+    if error:
+        return jsonify({"error": error}), 400
+
+    # Same feature-engineering logic as the original Streamlit app
+    raw_input = {
+        "Age": float(data["age"]),
+        "RestingBP": float(data["resting_bp"]),
+        "Cholesterol": float(data["cholesterol"]),
+        "FastingBS": float(data["fasting_bs"]),
+        "MaxHR": float(data["max_hr"]),
+        "Oldpeak": float(data["oldpeak"]),
+        "Sex_" + data["sex"]: 1,
+        "ChestPainType_" + data["chest_pain"]: 1,
+        "RestingECG_" + data["resting_ecg"]: 1,
+        "ExerciseAngina_" + data["exercise_angina"]: 1,
+        "ST_Slope_" + data["st_slope"]: 1,
+    }
+
+    input_df = pd.DataFrame([raw_input])
+
+    for col in expected_columns:
+        if col not in input_df.columns:
+            input_df[col] = 0
+
+    input_df = input_df[expected_columns]
+
+    try:
+        scaled_input = scaler.transform(input_df)
+        prediction = int(model.predict(scaled_input)[0])
+    except Exception as exc:  # keep the API resilient to unexpected input
+        return jsonify({"error": f"Prediction failed: {exc}"}), 500
+
+    return jsonify({
+        "prediction": prediction,
+        "risk": "High" if prediction == 1 else "Low",
+    })
+
+
+# ---------------------------------------------------------------------------
+# Serve the static frontend from the same process (single-port deployment)
+# ---------------------------------------------------------------------------
+@app.route("/")
+def index():
+    return send_from_directory(FRONTEND_DIR, "index.html")
+
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=False)
